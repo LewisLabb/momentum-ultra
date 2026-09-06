@@ -69,16 +69,20 @@ Le pilier « responsable par défaut » de la feuille de route n'est pas de la m
 
 ## Répartition du travail
 
-Deux agents, un seul dépôt. Le critère d'aiguillage reste : **si le résultat est subtilement faux, un test le rattraperait-il ?**
+Trois agents, un seul dépôt. Le premier aiguillage reste : **si le résultat est subtilement faux, un test le rattraperait-il ?**
 
-- **Oui → Gemini (Antigravity).** Volume mécanique et vérifiable : tables de chaînes et de traductions, pipelines d'assets et de thèmes, documentation, refactorisations répétitives, scripts de build, échafaudage de tests.
-- **Non → Opus (Claude Code).** Jugement : architecture, contrats d'interface, toute écriture sur l'appareil, gestion d'erreurs matérielles, budget flash/RAM, ergonomie, garde-fous réglementaires.
+- **Non → Opus (Claude Code).** Jugement : architecture, contrats d'interface, toute écriture sur l'appareil, gestion d'erreurs matérielles, budget flash/RAM, ergonomie, garde-fous réglementaires. Opus rédige aussi les fiches et mène toutes les revues.
+- **Oui →** travail mécanique et vérifiable, confié à un exécutant. Un second aiguillage, par la **forme** de la tâche, choisit lequel :
+  - **Copilot (agent de code GitHub) → une unité bien bornée, livrée en PR.** Une tâche nette qui tient dans une seule issue, implémentée dans le codebase existant en suivant ses patterns : une FAP, un module délimité, une correction ciblée. Fort quand le ticket a des critères d'acceptation clairs et un périmètre étroit. Travaille par issue → pull request sur GitHub.
+  - **Gemini (Antigravity) → le large et peu profond.** Ce que son grand contexte sert : tables de chaînes et de traductions, pipelines d'assets et de thèmes, documentation, refactorisations répétitives à travers de nombreux fichiers, échafaudage de tests.
 
-**Attention : le passage au firmware déplace l'équilibre.** Sur un outil Python, `pytest` rattrapait presque tout et la majorité du travail revenait à Gemini. Sur du C embarqué, sans matériel dans l'intégration continue, la réponse « oui » devient rare : une régression d'interface, un dépassement de RAM ou un défaut régional inversé ne se voient pas dans une suite de tests. Attendre que la part d'Opus augmente nettement. Une fiche qui prétend qu'un test rattrapera une erreur d'ergonomie ou de budget mémoire se trompe.
+En cas de doute entre les deux exécutants : une tâche = une PR bien délimitée va à Copilot ; un balayage qui touche beaucoup de fichiers va à Gemini.
 
-**La revue est toujours faite par Opus, jamais par l'agent qui a exécuté.** Elle passe par le sous-agent `reviseur` (`.claude/agents/reviseur.md`), qui tourne dans son propre contexte, sans droit d'écriture : il constate, il ne corrige pas. Aucune fusion sans son verdict — y compris pour le code produit par Gemini.
+**Attention : le passage au firmware déplace l'équilibre.** Sur un outil Python, `pytest` rattrapait presque tout et la majorité du travail revenait aux exécutants. Sur du C embarqué, sans matériel dans l'intégration continue, la réponse « oui » devient rare : une régression d'interface, un dépassement de RAM ou un défaut régional inversé ne se voient pas dans une suite de tests. Attendre que la part d'Opus augmente nettement. Une fiche qui prétend qu'un test rattrapera une erreur d'ergonomie ou de budget mémoire se trompe.
 
-Chaque agent lit ce fichier, mais ne lit pas les fichiers de configuration de l'autre. Ne pas recopier de règles dans un `GEMINI.md` : tout ce qui est commun vit ici.
+**La revue est toujours faite par Opus, jamais par l'agent qui a exécuté.** Elle passe par le sous-agent `reviseur` (`.claude/agents/reviseur.md`), qui tourne dans son propre contexte, sans droit d'écriture : il constate, il ne corrige pas. **Aucune fusion sans son verdict — pour Gemini comme pour Copilot.** Une PR ouverte par Copilot n'est pas fusionnée sur la foi de sa propre CI : elle passe par le `reviseur` au même titre que le reste. C'est là que la revue croisée mord : le relecteur n'est jamais le modèle qui a produit.
+
+Chaque agent lit ce fichier. Ne pas recopier de règles ailleurs — ni dans un `GEMINI.md`, ni dans un `.github/copilot-instructions.md` : tout ce qui est commun vit ici, et les fichiers propres à un agent ne font qu'y renvoyer.
 
 ## Arrête-toi et demande si
 
