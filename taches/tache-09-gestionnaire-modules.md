@@ -261,3 +261,16 @@ Documentation officielle Flipper (`docs.flipper.net/development/cli`), corrobor�
 ### Condition d'arrêt supplémentaire
 
 Si cette révision de contrat (auto-détection → sélection déclarative) est jugée insuffisante par rapport à l'ambition du Pilier 5 du brief, ne pas la fusionner en silence : remonter la question. Une vraie auto-détection matérielle nécessiterait soit un firmware Momentum modifié exposant une commande CLI dédiée (hors périmètre de ce projet, qui ne flashe jamais de firmware), soit un protocole de sonde SPI/I2C bas niveau non exposé aujourd'hui par le CLI série.
+
+### Journal de revue de la correction (reviseur) — 2026-09-06
+
+Revue du commit `1f32f39` par le sous-agent `reviseur` (contexte séparé, sans droit d'écriture) ; critères exécutés (pytest 119/119, ruff propre), non déduits.
+
+```text
+Verdict : accepté
+Motif : auto-détection illusoire retirée (detect_connected_modules absente) ;
+        --diagnose-modules hors-ligne rc 0 (cli.py:207-220) ; sélection
+        déclarative --modules et /ext/settings/modules.json réellement produit,
+        défaut vide (installer.py:49, cli.py:275).
+Garde-fous : intacts.
+```

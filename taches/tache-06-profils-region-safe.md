@@ -217,3 +217,16 @@ if profile.code == RegionCode.WORLD and not bundle_path:
 - [x] le texte affiché pour l'avertissement WORLD correspond mot pour mot à : « Attention : Le profil WORLD déverrouille les restrictions fréquentielles. L'utilisateur demeure légalement responsable des émissions radio selon sa législation locale. »
 - [x] `pytest` (suite complète) et `ruff check .` / `ruff format --check .` ne signalent rien
 - [x] aucun fichier hors périmètre touché
+
+### Journal de revue de la correction (reviseur) — 2026-09-06
+
+Revue du commit `1f32f39` par le sous-agent `reviseur` (contexte séparé, sans droit d'écriture) ; critères exécutés (pytest 119/119, ruff propre), non déduits.
+
+```text
+Verdict : accepté
+Motif : --region invalide rendu en français, rc 1 (cli.py:116-119) ;
+        /ext/settings/region.json réellement produit dans le plan avec le
+        contenu US exact (installer.py:129-137, cli.py:274) ; avertissement
+        légal WORLD conforme au contrat, mot pour mot (cli.py:255-260).
+Garde-fous : intacts.
+```

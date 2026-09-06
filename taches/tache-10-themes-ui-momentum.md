@@ -232,3 +232,15 @@ Mettre à jour la docstring de module en tête de `theme.py` (`"""Momentum UI th
 - [x] aucune tentative d'écriture de frame binaire (`.bm`/`.bmx`) n'est ajoutée — hors périmètre de cette correction, décision de portée du 2026-09-06
 - [x] `pytest` (suite complète, `tests/test_theme.py` mis à jour pour le nouveau chemin `/ext/settings/momentum_ui_info.txt`) et `ruff check .` / `ruff format --check .` ne signalent rien
 - [x] aucun fichier hors périmètre touché
+
+### Journal de revue de la correction (reviseur) — 2026-09-06
+
+Revue du commit `1f32f39` par le sous-agent `reviseur` (contexte séparé, sans droit d'écriture) ; critères exécutés (pytest 119/119, ruff propre), non déduits.
+
+```text
+Verdict : accepté
+Motif : assets de thème écrits sous /ext/settings/ uniquement (plus de
+        /ext/dolphin/ trompeur, theme.py:129-138) ; docstring et aide --theme
+        honnêtes, « Thème visuel Momentum » retiré de --help.
+Garde-fous : intacts.
+```

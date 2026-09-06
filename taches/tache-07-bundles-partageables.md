@@ -212,3 +212,17 @@ if profile.code == RegionCode.WORLD:
 - [x] `main(["--install", "--region", "WORLD", "--bundle", "<bundle valide>", "--dry-run"])` affiche l'avertissement légal WORLD (non-régression du point cli.py:252)
 - [x] `pytest` (suite complète) et `ruff check .` / `ruff format --check .` ne signalent rien
 - [x] aucun fichier hors périmètre touché
+
+### Journal de revue de la correction (reviseur) — 2026-09-06
+
+Revue du commit `1f32f39` par le sous-agent `reviseur` (contexte séparé, sans droit d'écriture) ; critères exécutés (pytest 119/119, ruff propre), non déduits.
+
+```text
+Verdict : accepté
+Motif : branche .tar.gz d'import déléguée à load_manifest_from_dict
+        (bundle.py:148) — un destination_path malveillant (« ../../etc/... »)
+        lève BundleError avant tout plan ; somme SHA256 calculée à l'export et
+        vérifiée à l'import (bundle.py:50,66,122-145) ; régression corrigée :
+        --bundle n'escamote plus l'avertissement WORLD (cli.py:255).
+Garde-fous : intacts, confinement /ext/ renforcé.
+```

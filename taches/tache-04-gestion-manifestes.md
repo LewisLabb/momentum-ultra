@@ -224,3 +224,15 @@ Si `content` n'est ni `str` ni déjà `bytes` (un entier, par exemple), il est a
 - [x] un manifeste valide, avec des chemins conformes sous `/ext/`, continue de produire un plan d'installation identique à avant (non-régression — rejouer les cas nominaux existants de `test_manifest.py`)
 - [x] `pytest` (suite complète) et `ruff check .` / `ruff format --check .` ne signalent rien
 - [x] aucun fichier hors périmètre touché
+
+### Journal de revue de la correction (reviseur) — 2026-09-06
+
+Revue du commit `1f32f39` par le sous-agent `reviseur` (contexte séparé, sans droit d'écriture) ; critères exécutés (pytest 119/119, ruff propre), non déduits.
+
+```text
+Verdict : accepté
+Motif : validation des segments de chemin + confinement /ext/ via
+        posixpath.normpath + typage de content (manifest.py:12-20,105-114,
+        137-153) ; les six cas adverses du contrat lèvent ValueError/TypeError.
+Garde-fous : intacts.
+```

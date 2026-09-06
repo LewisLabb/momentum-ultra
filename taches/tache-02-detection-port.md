@@ -207,3 +207,16 @@ Sans effet sur Windows (paramètre ignoré, déjà exclusif par nature), correct
 - [x] `main(["--detect"])` sur ce même mock affiche le message français sur `stderr` et retourne `1` — vérifié en appelant `main()`, pas seulement `find_flipper()` en isolation, pour confirmer que `cli.py` n'a pas besoin d'être modifié
 - [x] `pytest` (suite complète) et `ruff check .` / `ruff format --check .` ne signalent rien
 - [x] aucun fichier hors périmètre touché
+
+### Journal de revue de la correction (reviseur) — 2026-09-06
+
+Revue du commit `1f32f39` par le sous-agent `reviseur` (contexte séparé, sans droit d'écriture) ; critères exécutés (pytest 119/119, ruff propre), non déduits.
+
+```text
+Verdict : accepté
+Motif : exclusivité du port affirmée (exclusive=True, device.py:75) ;
+        FlipperEnumerationError enveloppe les pannes de comports
+        (device.py:30-31,45-50) ; --detect sur énumération en panne → rc 1,
+        message français, sans traceback.
+Garde-fous : intacts.
+```
