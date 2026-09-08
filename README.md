@@ -1,57 +1,40 @@
 # momentum-ultra
 
-Outil de préparation et d'onboarding complet pour Flipper Zero sous firmware Momentum Ultra : installation d'un pack d'apps curé, d'un asset pack, d'un profil de réglages région-safe, des dictionnaires de saisie rapide, et d'un premier démarrage guidé.
+Firmware Flipper Zero, fork de [Momentum](https://github.com/Next-Flip/Momentum-Firmware).
+
+**momentum-ultra n'ajoute pas une centième fonction à ton Flipper. Il rend enfin évident, rapide et agréable tout ce qu'il sait déjà faire.**
+
+Dès le déballage, une installation guidée te met en route en deux minutes : firmware, apps curées, thème et réglages, sans jamais ouvrir un dossier. L'écran d'accueil se comprend en trois secondes. Taper un mot de passe n'est plus un supplice — clavier prédictif, pré-saisies, ou ton téléphone en relais. Tes apps s'installent et se mettent à jour en Wi-Fi, sans PC. Tu branches une carte externe, elle se présente toute seule.
+
+Et parce que la confiance compte autant que la puissance : momentum-ultra sait dans quelle région tu es et te dit clairement ce qui est permis chez toi. Puissant par défaut, responsable par défaut.
+
+Ce n'est pas « la dernière mise à jour de l'histoire ». C'est la version qui, enfin, se sent finie — celle qu'on garde.
 
 ## Ce que ce projet ne fait pas
 
-**Ce projet ne flashe pas de firmware.** Momentum fournit déjà son Web Updater pour cette étape.
+**Il n'écrit pas son propre flasheur.** Il produit du firmware ; l'installer reste le travail du Web Updater de Momentum, de qFlipper, ou de `./fbt flash_usb_full` en développement. C'est l'opération la plus risquée pour le matériel, et elle est déjà résolue ailleurs.
 
-## Fonctionnalités
+**Il ne réinvente pas la radio.** Momentum possède déjà presque toutes les fonctions.
 
-- 🔍 **Détection automatique & exclusivité** : Détection instantanée du Flipper Zero en USB avec vérification des conflits (qFlipper / Web Updater).
-- 🛡️ **Garde-fous matériels stricts** : Mode simulation (`--dry-run`) actif par défaut, confirmation interactive obligatoire avant toute écriture réelle, **aucune suppression** sur la carte SD (déplacement préventif vers `/ext/backup`).
-- 🌍 **Profils région-safe (P0)** : Sélection de région (`EU / CE`, `US / FCC`, `JP / MIC`, `WORLD`) avec configuration responsable des bandes de fréquences d'émission.
-- ⌨️ **Dictionnaires pour clavier prédictif (P1)** : Déploiement des pré-saisies (SSID, adresses IP de lab, commandes BadUSB, mots fréquents) sous `/ext/momentum/dicts/`.
-- 🎨 **Thèmes visuels & personnalisation UI (P0)** : Sélection de styles d'affichage (`default`, `dark_stealth`, `retro_gamer`, `cyberpunk`) et configuration de la barre d'état.
-- 💾 **Synchronisation des captures (P1)** : Sauvegarde locale des fichiers SubGHz, NFC, RFID, IR, BadUSB avec inventaire JSON.
-- ⚡ **Bibliothèque de payloads BadUSB (P1)** : Scripts d'administration et diagnostics réseau (Windows, macOS, Linux) vérifiés et non destructeurs sous `/ext/badusb/`.
-- 📦 **Bundles autoinstall partageables (P1)** : Export et import de packs d'installation complets au format `.tar.gz` ou `.json`.
-- 🚀 **Assistant de premier démarrage** : Conseils guidés et suivi de progression en français.
-
-## Commandes
+## Construire
 
 ```bash
-# Activer l'environnement
-.venv\Scripts\activate
+./fbt                   # construire le firmware
+./fbt flash_usb_full    # flasher l'appareil connecte
+./fbt lint              # verifier le style C
 
-# Vérifier la détection du Flipper
-momentum-ultra --detect
-
-# Diagnostiquer les modules d'extension externes connectés (GPIO)
-momentum-ultra --diagnose-modules
-
-# Consulter la bibliothèque de scripts BadUSB intégrés
-momentum-ultra --list-payloads
-
-# Lancer la simulation d'installation (mode sans risque par défaut)
-momentum-ultra --install
-
-# Lancer l'installation avec un thème spécifique et un profil régional
-momentum-ultra --install --theme dark_stealth --region EU --no-dry-run
-
-# Sauvegarder les captures du Flipper vers un dossier local
-momentum-ultra --backup-captures ./mes_captures
-
-# Exporter le pack complet vers un bundle partageable
-momentum-ultra --export-bundle mon_pack.tar.gz
-
-# Installer un bundle personnalisé téléchargé
-momentum-ultra --install --bundle mon_pack.tar.gz --no-dry-run
+ufbt                    # construire une application autonome
+ufbt launch             # la construire et la lancer sur l'appareil connecte
 ```
 
-## Développement et tests
+## Où regarder
 
-```bash
-pytest                        # 80 tests automatisés (couche série 100% simulée)
-ruff check . && ruff format . # lint et formatage
-```
+| Fichier | Contenu |
+| --- | --- |
+| `FEUILLE-DE-ROUTE.md` | La vision, les six piliers, l'ordre des chantiers |
+| `AGENTS.md` | Les règles de travail, les garde-fous matériels et réglementaires |
+| `taches/` | Les fiches de tâche et leurs journaux de revue |
+
+## Avertissement
+
+Ce firmware donne accès à des fonctions radio dont l'usage est encadré par la loi, et cet encadrement varie d'un pays à l'autre. Les profils régionaux sont conservateurs par défaut ; les déverrouiller est un choix explicite, et la responsabilité de la loi locale reste celle de l'utilisateur. La réception est en général moins encadrée que l'émission.
