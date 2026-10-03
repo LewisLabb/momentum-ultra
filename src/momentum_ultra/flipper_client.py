@@ -135,7 +135,7 @@ class FlipperClient:
     def _read_until(self, marker: bytes) -> str:
         """Read incoming serial bytes until the marker is reached."""
         buffer = bytearray()
-        start_time = time.time()
+        start_time = time.monotonic()
 
         while True:
             if buffer.endswith(marker):
@@ -145,7 +145,7 @@ class FlipperClient:
             if chunk:
                 buffer.extend(chunk)
             else:
-                if (time.time() - start_time) > self.timeout:
+                if (time.monotonic() - start_time) > self.timeout:
                     raise FlipperTimeoutError(
                         "Délai d'attente dépassé lors de la réponse du Flipper Zero."
                     )
@@ -158,13 +158,13 @@ class FlipperClient:
     def _read_exact(self, n: int) -> bytes:
         """Read exactly n raw bytes from the serial connection (binary-safe)."""
         buffer = bytearray()
-        start_time = time.time()
+        start_time = time.monotonic()
         while len(buffer) < n:
             chunk = self._read_bytes(n - len(buffer))
             if chunk:
                 buffer.extend(chunk)
-                start_time = time.time()
-            elif (time.time() - start_time) > self.timeout:
+                start_time = time.monotonic()
+            elif (time.monotonic() - start_time) > self.timeout:
                 raise FlipperTimeoutError(
                     "Délai d'attente dépassé lors de la lecture du fichier."
                 )
