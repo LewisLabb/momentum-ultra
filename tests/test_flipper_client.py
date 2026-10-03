@@ -362,6 +362,10 @@ def test_timeout_error() -> None:
     mock_serial = MockSerialStream([])
     with (
         patch("serial.Serial", return_value=mock_serial),
+        patch(
+            "momentum_ultra.flipper_client.time.monotonic",
+            side_effect=[0.0, 0.031],
+        ),
         pytest.raises(FlipperTimeoutError) as exc_info,
     ):
         client = FlipperClient(port="COM3", timeout=0.03)
