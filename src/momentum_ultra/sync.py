@@ -1,6 +1,7 @@
 """Synchronize and catalog remote Flipper Zero captures to the host machine."""
 
 import json
+import posixpath
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -19,6 +20,19 @@ CAPTURE_DIRECTORIES: dict[str, str] = {
     "ibutton": "/ext/ibutton",
     "badusb": "/ext/badusb",
 }
+
+
+def _validate_capture_filename(filename: str) -> str:
+    """Reject remote names that could escape the per-category local directory."""
+    if (
+        not filename
+        or filename in {".", ".."}
+        or "/" in filename
+        or "\\" in filename
+        or posixpath.basename(filename) != filename
+    ):
+        raise ValueError(f"Nom de capture distant invalide : {filename!r}")
+    return filename
 
 
 @dataclass(frozen=True)
@@ -53,11 +67,12 @@ def list_remote_captures(client: FlipperClient) -> list[CaptureItem]:
 
         for item in items:
             if not item.is_dir:
+                filename = _validate_capture_filename(item.name)
                 captured.append(
                     CaptureItem(
                         category=category,
-                        remote_path=f"{remote_dir}/{item.name}",
-                        filename=item.name,
+                        remote_path=f"{remote_dir}/{filename}",
+                        filename=filename,
                         size=item.size,
                     )
                 )

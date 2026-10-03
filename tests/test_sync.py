@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import pytest
+
 from momentum_ultra.flipper_client import (
     FlipperClient,
     FlipperCommandError,
@@ -96,6 +98,19 @@ def test_sync_captures_to_local_real_mode(tmp_path: Path) -> None:
     assert local_file.read_bytes() == raw  # byte-for-byte fidelity
     assert report.total_bytes == len(raw)  # counts bytes actually written
     client.read_file.assert_called_once_with("/ext/nfc/card.nfc")
+
+
+def test_list_remote_captures_rejects_path_traversal_filename() -> None:
+    """Test that a remote filename cannot escape the capture directory locally."""
+    client = MagicMock(spec=FlipperClient)
+    client.list_dir.side_effect = lambda path: (
+        [StorageItem(name="../../outside.txt", is_dir=False, size=1)]
+        if path == "/ext/nfc"
+        else []
+    )
+
+    with pytest.raises(ValueError, match="Nom de capture distant invalide"):
+        list_remote_captures(client)
 
 
 def test_export_captures_catalog(tmp_path: Path) -> None:
